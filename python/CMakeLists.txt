@@ -10,7 +10,7 @@ find_package(Python REQUIRED COMPONENTS Interpreter Development.Module)
 find_package(nanobind CONFIG REQUIRED)
 
 include(CheckCXXCompilerFlag)
-if (CLUSTERING_USE_CPM)
+if (CONAN_CREATE)
     include(${CMAKE_CURRENT_SOURCE_DIR}/../cmake/CPM.cmake)
     include(${CMAKE_CURRENT_SOURCE_DIR}/../cmake/CitorDep.cmake)
 endif()

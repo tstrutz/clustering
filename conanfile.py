@@ -142,7 +142,7 @@ class ClusteringConan(ConanFile):
         tc.cache_variables["CLUSTERING_BUILD_TESTS"] = self.options.CLUSTERING_BUILD_TESTS
         tc.cache_variables["CLUSTERING_BUILD_DOCS"] = self.options.CLUSTERING_BUILD_DOCS
         tc.cache_variables["CLUSTERING_CREATE_PYTHON_BINDINGS"] = self.options.CLUSTERING_CREATE_PYTHON_BINDINGS
-        tc.variables["CONAN_CREATE"] = True
+        tc.cache_variables["CONAN_CREATE"] = True
 
         tc.user_presets_path = False
         tc.generator = "Ninja Multi-Config"

@@ -8,7 +8,6 @@
       "cacheVariables": {
         "CLUSTERING_BUILD_BENCHMARK": "0",
         "CLUSTERING_BUILD_TESTS": "0",
-        "CLUSTERING_USE_CPM": "0",
         "CLUSTERING_BUILD_DEMO": "0"
       }
     },
@@ -37,6 +36,7 @@
       "name": "conan",
       "hidden": true,
       "cacheVariables": {
+        "CONAN_CREATE": true,
         "CONAN_HOST_PROFILE": "default;auto-cmake",
         "CMAKE_PROJECT_TOP_LEVEL_INCLUDES": "./cmake/conan_provider.cmake"
       }
@@ -45,9 +45,7 @@
       "name": "cpm",
       "hidden": true,
       "cacheVariables": {
-        "CLUSTERING_USE_CPM": "1",
-        "CONAN_HOST_PROFILE": "default;auto-cmake",
-        "CMAKE_PROJECT_TOP_LEVEL_INCLUDES": "./cmake/conan_provider.cmake"
+        "CONAN_HOST_PROFILE": "default;auto-cmake"
       }
     },
     {

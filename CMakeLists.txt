@@ -21,14 +21,13 @@ message(STATUS "Installing to ${CMAKE_INSTALL_PREFIX}")
 option(CLUSTERING_BUILD_DEMO "Build demo (This takes several minutes!)" OFF)
 option(CLUSTERING_BUILD_BENCHMARK "Build benchmarks" ${CLUSTERING_IS_TOP_LEVEL})
 option(CLUSTERING_BUILD_TESTS "Build unit tests" ${CLUSTERING_IS_TOP_LEVEL})
-option(CLUSTERING_USE_CPM "Build with CPM" ON)
 option(CLUSTERING_CREATE_PYTHON_BINDINGS "Build python bindings" OFF)
 option(CLUSTERING_BUILD_DOCS
     "Build API documentation (Doxygen + doxygen-awesome-css)"
     OFF
 )
 
-if (CLUSTERING_USE_CPM)
+if (NOT CONAN_CREATE)
     include(cmake/CPM.cmake)
     include(cmake/CitorDep.cmake)
 else()
@@ -97,7 +96,7 @@ if (CLUSTERING_CREATE_PYTHON_BINDINGS)
 endif()
 
 if(CLUSTERING_BUILD_BENCHMARK)
-    if (CLUSTERING_USE_CPM)
+    if (NOT CONAN_CREATE)
         cpmaddpackage(
             NAME benchmark
             GITHUB_REPOSITORY google/benchmark
