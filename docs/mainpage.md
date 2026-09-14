@@ -32,10 +32,10 @@ CPMAddPackage(
     OPTIONS "CLUSTERING_USE_AVX2 ON"
 )
 
-target_link_libraries(MyTarget PRIVATE clustering_header_lib)
+target_link_libraries(MyTarget PRIVATE clustering)
 ```
 
-Consumers get the `clustering_header_lib` INTERFACE target with `-mavx2 -mfma` and the `CLUSTERING_USE_AVX2` compile definition. Tests, benchmarks, and clang-tidy default to **OFF** when pulled in as a dependency.
+Consumers get the `clustering` INTERFACE target with `-mavx2 -mfma` and the `CLUSTERING_USE_AVX2` compile definition. Tests, benchmarks, and clang-tidy default to **OFF** when pulled in as a dependency.
 
 ### Install (add_subdirectory)
 
@@ -45,7 +45,7 @@ git clone https://github.com/Lallapallooza/clustering.git third_party/clustering
 
 ```cmake
 add_subdirectory(third_party/clustering)
-target_link_libraries(MyTarget PRIVATE clustering_header_lib)
+target_link_libraries(MyTarget PRIVATE clustering)
 ```
 
 ## Install (Python, via uv from GitHub)

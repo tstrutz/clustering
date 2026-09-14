@@ -29,7 +29,7 @@ CPMAddPackage(
     GIT_TAG v0.10.1
     OPTIONS "CLUSTERING_USE_AVX2 ON"
 )
-target_link_libraries(MyTargetName PRIVATE clustering_header_lib)
+target_link_libraries(MyTargetName PRIVATE clustering)
 ```
 
 ### C++ via add_subdirectory
@@ -40,7 +40,7 @@ git clone git@github.com:Lallapallooza/clustering.git
 
 ```cmake
 add_subdirectory(clustering)
-target_link_libraries(MyTargetName PRIVATE clustering_header_lib)
+target_link_libraries(MyTargetName PRIVATE clustering)
 ```
 
 ### Python via `uv` from GitHub

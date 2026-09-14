@@ -10,8 +10,10 @@ find_package(Python REQUIRED COMPONENTS Interpreter Development.Module)
 find_package(nanobind CONFIG REQUIRED)
 
 include(CheckCXXCompilerFlag)
-include(${CMAKE_CURRENT_SOURCE_DIR}/../cmake/CPM.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/../cmake/CitorDep.cmake)
+if (CLUSTERING_USE_CPM)
+    include(${CMAKE_CURRENT_SOURCE_DIR}/../cmake/CPM.cmake)
+    include(${CMAKE_CURRENT_SOURCE_DIR}/../cmake/CitorDep.cmake)
+endif()
 check_cxx_compiler_flag("-mavx2" CLUSTERING_COMPILER_SUPPORTS_AVX2)
 
 nanobind_add_module(_clustering src/_bindings.cpp)
