@@ -178,11 +178,11 @@ class ClusteringConan(ConanFile):
 
         # Tell Conan that this package provides its own CMake configuration
         # and should not have auto-generated CMake files
-        self.cpp_info.set_property("cmake_find_mode", "both")
-        self.cpp_info.builddirs = ["cmake"]
+        self.cpp_info.set_property("cmake_find_mode", "none")
+        self.cpp_info.builddirs = ["cmake/clustering"]
         self.cpp_info.includedirs = ["include"]
-        self.cpp_info.set_property("cmake_file_name", "Clustering")
-        self.cpp_info.set_property("cmake_target_name", "Clustering::Clustering")
+        self.cpp_info.set_property("cmake_file_name", "clustering")
+        self.cpp_info.set_property("cmake_target_name", "clustering::clustering")
 
         if self.options.CLUSTERING_CREATE_PYTHON_BINDINGS:
             self.cpp_info.components["pybindings"].libs = ["clustering"]
