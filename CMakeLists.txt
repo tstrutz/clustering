@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
-project(clustering VERSION 0.10.1)
+project(clustering VERSION 0.11.0)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES

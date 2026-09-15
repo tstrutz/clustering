@@ -16,7 +16,7 @@ from conan.tools.layout import basic_layout
 
 class ClusteringConan(ConanFile):
     name = "clustering"
-    version = "0.10.1"
+    version = "0.11.0"
     license = "MIT"
     homepage = "https://github.com/Lallapallooza/clustering"
     url = "https://github.com/Lallapallooza/clustering"
