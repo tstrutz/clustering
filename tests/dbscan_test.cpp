@@ -31,7 +31,9 @@ public:
                             const std::array<float, 2> periods,
                             const clustering::math::Pool /*pool*/,
                             std::array<float, 2> *observedPeriods)
-      : m_index(points), m_periods(periods), m_observedPeriods(observedPeriods) {}
+      : m_index(points),
+        m_periods(periods),
+        m_observedPeriods(observedPeriods) {}
 
   clustering::index::CoreAdjacency query(float radius,
                                          std::size_t minPts,
@@ -105,15 +107,44 @@ TEST(DBSCAN, SupportsRuntimeConfiguredQueryModelFactory) {
     points[i][1] = 0.0f;
   }
 
-  const std::array<float, 2> periods{12.0F, 20.0F};
+  const std::array<float, 2> firstPeriods{12.0F, 20.0F};
+  const std::array<float, 2> secondPeriods{30.0F, 40.0F};
   std::array<float, 2> observedPeriods{0.0F, 0.0F};
+  std::size_t factoryCalls = 0;
   DBSCAN<float, ConfiguredBruteForceIndex> dbscan(0.3f, 2, 1);
+
   dbscan.run(points, [&](const NDArray<float, 2> &input, clustering::math::Pool pool) {
-    return ConfiguredBruteForceIndex(input, periods, pool, &observedPeriods);
+    ++factoryCalls;
+    return ConfiguredBruteForceIndex(input, firstPeriods, pool, &observedPeriods);
   });
 
   EXPECT_EQ(dbscan.nClusters(), 2u);
-  EXPECT_EQ(observedPeriods, periods);
+  EXPECT_EQ(observedPeriods, firstPeriods);
+  EXPECT_EQ(factoryCalls, 1u);
+
+  dbscan.run(points, [&](const NDArray<float, 2> &input, clustering::math::Pool pool) {
+    ++factoryCalls;
+    return ConfiguredBruteForceIndex(input, secondPeriods, pool, &observedPeriods);
+  });
+
+  EXPECT_EQ(dbscan.nClusters(), 2u);
+  EXPECT_EQ(observedPeriods, secondPeriods);
+  EXPECT_EQ(factoryCalls, 2u);
+}
+
+TEST(DBSCAN, DoesNotInvokeQueryModelFactoryForEmptyInput) {
+  NDArray<float, 2> points({0, 2});
+  std::size_t factoryCalls = 0;
+  DBSCAN<float, ConfiguredBruteForceIndex> dbscan(0.3f, 2, 1);
+
+  dbscan.run(points, [&](const NDArray<float, 2> &input, clustering::math::Pool pool) {
+    ++factoryCalls;
+    return ConfiguredBruteForceIndex(input, {12.0F, 20.0F}, pool, nullptr);
+  });
+
+  EXPECT_EQ(factoryCalls, 0u);
+  EXPECT_EQ(dbscan.nClusters(), 0u);
+  EXPECT_EQ(dbscan.labels().dim(0), 0u);
 }
 
 TEST(DBSCAN, MarksIsolatedPointsAsNoise) {
