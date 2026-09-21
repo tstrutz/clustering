@@ -106,8 +106,8 @@ public:
    * @warning @p X must remain alive and unchanged for the full duration of this call.
    */
   template <class QueryModelFactory>
-    requires std::same_as<std::invoke_result_t<QueryModelFactory &, const NDArray<T, 2> &, math::Pool>,
-                          QueryModel>
+    requires std::same_as<
+        std::invoke_result_t<QueryModelFactory &, const NDArray<T, 2> &, math::Pool>, QueryModel>
   void run(const NDArray<T, 2> &X, QueryModelFactory &&queryModelFactory) {
     const std::size_t n = X.dim(0);
     ensureLabelsShape(n);

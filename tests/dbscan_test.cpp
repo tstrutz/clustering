@@ -31,12 +31,9 @@ public:
                             const std::array<float, 2> periods,
                             const clustering::math::Pool /*pool*/,
                             std::array<float, 2> *observedPeriods)
-      : m_index(points),
-        m_periods(periods),
-        m_observedPeriods(observedPeriods) {}
+      : m_index(points), m_periods(periods), m_observedPeriods(observedPeriods) {}
 
-  clustering::index::CoreAdjacency query(float radius,
-                                         std::size_t minPts,
+  clustering::index::CoreAdjacency query(float radius, std::size_t minPts,
                                          clustering::math::Pool pool) const {
     if (m_observedPeriods != nullptr) {
       *m_observedPeriods = m_periods;
@@ -133,7 +130,7 @@ TEST(DBSCAN, SupportsRuntimeConfiguredQueryModelFactory) {
 }
 
 TEST(DBSCAN, DoesNotInvokeQueryModelFactoryForEmptyInput) {
-  NDArray<float, 2> points({0, 2});
+  const NDArray<float, 2> points({0, 2});
   std::size_t factoryCalls = 0;
   DBSCAN<float, ConfiguredBruteForceIndex> dbscan(0.3f, 2, 1);
 
