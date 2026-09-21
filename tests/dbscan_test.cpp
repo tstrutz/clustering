@@ -22,9 +22,35 @@ namespace {
 struct MissingQueryIndex {
   explicit MissingQueryIndex(const NDArray<float, 2> & /*points*/) {}
 };
+
+class ConfiguredBruteForceIndex {
+public:
+  explicit ConfiguredBruteForceIndex(const NDArray<float, 2> &points) : m_index(points) {}
+
+  ConfiguredBruteForceIndex(const NDArray<float, 2> &points,
+                            const std::array<float, 2> periods,
+                            const clustering::math::Pool /*pool*/,
+                            std::array<float, 2> *observedPeriods)
+      : m_index(points), m_periods(periods), m_observedPeriods(observedPeriods) {}
+
+  clustering::index::CoreAdjacency query(float radius,
+                                         std::size_t minPts,
+                                         clustering::math::Pool pool) const {
+    if (m_observedPeriods != nullptr) {
+      *m_observedPeriods = m_periods;
+    }
+    return m_index.query(radius, minPts, pool);
+  }
+
+private:
+  BruteForcePairwise<float> m_index;
+  std::array<float, 2> m_periods{0.0F, 0.0F};
+  std::array<float, 2> *m_observedPeriods{nullptr};
+};
 } // namespace
 
 static_assert(!clustering::index::RangeIndex<MissingQueryIndex, float>);
+static_assert(clustering::index::RangeIndex<ConfiguredBruteForceIndex, float>);
 static_assert(clustering::index::RangeIndex<KDTree<float, KDTreeDistanceType::kEucledian>, float>);
 static_assert(clustering::index::RangeIndex<BruteForcePairwise<float>, float>);
 static_assert(clustering::index::RangeIndex<AutoRangeIndex<float>, float>);
@@ -66,6 +92,28 @@ TEST(DBSCAN, FindsTwoWellSeparatedClusters) {
 
   EXPECT_EQ(dbscan.nClusters(), 2u);
   EXPECT_NE(dbscan.labels().flatIndex(0), dbscan.labels().flatIndex(5));
+}
+
+TEST(DBSCAN, SupportsRuntimeConfiguredQueryModelFactory) {
+  NDArray<float, 2> points({10, 2});
+  for (std::size_t i = 0; i < 5; ++i) {
+    points[i][0] = static_cast<float>(i) * 0.1f;
+    points[i][1] = 0.0f;
+  }
+  for (std::size_t i = 5; i < 10; ++i) {
+    points[i][0] = 10.0f + (static_cast<float>(i - 5) * 0.1f);
+    points[i][1] = 0.0f;
+  }
+
+  const std::array<float, 2> periods{12.0F, 20.0F};
+  std::array<float, 2> observedPeriods{0.0F, 0.0F};
+  DBSCAN<float, ConfiguredBruteForceIndex> dbscan(0.3f, 2, 1);
+  dbscan.run(points, [&](const NDArray<float, 2> &input, clustering::math::Pool pool) {
+    return ConfiguredBruteForceIndex(input, periods, pool, &observedPeriods);
+  });
+
+  EXPECT_EQ(dbscan.nClusters(), 2u);
+  EXPECT_EQ(observedPeriods, periods);
 }
 
 TEST(DBSCAN, MarksIsolatedPointsAsNoise) {
