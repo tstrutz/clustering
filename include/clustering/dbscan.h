@@ -80,7 +80,9 @@ public:
    *
    * @warning @p X must remain alive and unchanged for the full duration of this call.
    */
-  void run(const NDArray<T, 2> &X) {
+  void run(const NDArray<T, 2> &X) requires std::constructible_from < QueryModel, const
+      NDArray<T, 2>
+  & > || std::constructible_from<QueryModel, const NDArray<T, 2> &, math::Pool> {
     run(X, [](const NDArray<T, 2> &points, math::Pool pool) {
       if constexpr (std::is_constructible_v<QueryModel, const NDArray<T, 2> &, math::Pool>) {
         return QueryModel(points, pool);

@@ -25,11 +25,10 @@ struct MissingQueryIndex {
 
 class ConfiguredBruteForceIndex {
 public:
-  explicit ConfiguredBruteForceIndex(const NDArray<float, 2> &points) : m_index(points) {}
-
-  ConfiguredBruteForceIndex(const NDArray<float, 2> &points, const std::array<float, 2> periods,
-                            const clustering::math::Pool /*pool*/,
-                            std::array<float, 2> *observedPeriods)
+  explicit ConfiguredBruteForceIndex(const NDArray<float, 2> &points,
+                                     const std::array<float, 2> periods,
+                                     const clustering::math::Pool /*pool*/,
+                                     std::array<float, 2> *observedPeriods)
       : m_index(points), m_periods(periods), m_observedPeriods(observedPeriods) {}
 
   clustering::index::CoreAdjacency query(float radius, std::size_t minPts,
