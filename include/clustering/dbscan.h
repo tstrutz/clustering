@@ -37,7 +37,7 @@ namespace clustering {
  *                    sweep at or above it.
  */
 template <class T, class QueryModel = index::AutoRangeIndex<T>>
-  requires index::RangeIndex<QueryModel, T>
+requires index::RangeIndex<QueryModel, T>
 class DBSCAN {
 public:
   static constexpr std::int32_t UNCLASSIFIED = -2; ///< Sentinel for a component without a
@@ -106,9 +106,9 @@ public:
    * @warning @p X must remain alive and unchanged for the full duration of this call.
    */
   template <class QueryModelFactory>
-    requires std::same_as<
-        std::invoke_result_t<QueryModelFactory &, const NDArray<T, 2> &, math::Pool>, QueryModel>
-  void run(const NDArray<T, 2> &X, QueryModelFactory &&queryModelFactory) {
+  requires std::same_as < std::invoke_result_t < QueryModelFactory &, const NDArray<T, 2>
+  &, math::Pool >,
+      QueryModel > void run(const NDArray<T, 2> &X, QueryModelFactory &&queryModelFactory) {
     const std::size_t n = X.dim(0);
     ensureLabelsShape(n);
     m_clusterId = 0;
