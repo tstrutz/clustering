@@ -153,30 +153,6 @@ int main() {
 
   std::cout << "Number of clusters: " << dbscan.nClusters() << '\n';
 }
-```
-
-The factory is called once for each non-empty fit and must return the query-model type selected as
-the `DBSCAN` template argument. The returned model may borrow `points`, but it must not outlive
-the `run` call. Runtime configuration can be changed safely between calls without static global
-state:
-
-```cpp
-DBSCAN<float, MyToroidalIndex> dbscan(/*eps=*/1.5f, /*minPts=*/3, /*nJobs=*/4);
-
-const auto runGrid = [&](const NDArray<float, 2> &points,
-                         const std::size_t gridRows,
-                         const std::size_t gridColumns) {
-  const std::array<float, 2> periods{
-      static_cast<float>(gridRows),
-      static_cast<float>(gridColumns),
-  };
-
-  dbscan.run(points, [periods](const NDArray<float, 2> &input,
-                               clustering::math::Pool pool) {
-    return MyToroidalIndex(input, periods, pool);
-  });
-};
-```
 
 ### k-means
 
